@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1; user-scalable=no">
+<title>无标题文档</title>
+<style type="text/css">
+img{border-style: none; width: 100%!important;}
+.imgbox{ margin: 15px; height: 350px}
+.imgbox img{width: 530px; height: 350px}
+.imgbox ul{list-style: none; margin: 0; padding: 0}
+.imgbox ul li{display: none}
+.title_bg{z-index:1; background: #000; filter: alpha(opacity=30); -moz-opacity: 0.3; opacity: 0.3}
+.title{z-index: 2; color: #fff; text-indext: 10px; font-size: 14px; line-height: 40px; padding-left: 15px;}
+.pager{z-index: 3}
+.common{position: relative; height: 40px; margin-top: -43px}
+.pager ul{margin-top: 5px}
+.pager ul li{float: right; color:#fff; font-size: 15px; display: block; border: 2px solid #e5eaff; width: 25px; height: 25px; margin-right: 4px; margin-top: 5px; text-align: center; line-height: 25px; background: #6f4f67; cursor:pointer}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+	<h2 class="text-center"></h2>
+
+	<div class="imgbox">
+		<ul>
+			<li style="display: block"><a href=""><img class="img-responsive" src="img/1.jpg" /></a></li>
+			<li><a href=""><img class="img-responsive" src="img/2.jpg" /></a></li>
+			<li><a href=""><img class="img-responsive" src="img/3.jpg" /></a></li>
+			<li><a href=""><img class="img-responsive" src="img/4.jpg" /></a></li>
+		</ul>
+		<div class="title_bg common">
+		fdsafdafdfas
+		</div>
+		<div class="title common">fdasfdsafads</div>
+		<div class="pager common">
+				<ul>
+					<li>4</li>
+					<li>3</li>
+					<li>2</li>
+					<li style="background: #ff70Ad">1</li>
+				</ul>
+		</div>
+	</div>
+</div>
+
+<script src="jquery-1.11.1.min.js"></script>
+
+<script type="text/javascript">
+
+(new CenterImgPlay()).Start()
+
+function CenterImgPlay(){
+	this.list = $('.imgbox').children(':first').children()
+	this.indexs = []
+	this.length = this.list.length
+	// show time
+	this.timer = 5000
+	this.showTitle = $('.title')
+
+	var index = 0, self = this, pre = 0, handid, isPlay = false, isPagerClick = false
+
+	this.Start = function(){
+		this.Init()
+		handid = setInterval(self.Play, this.timer)
+	}
+
+	this.Init = function(){
+		var o = $('.pager ul li'), _i
+
+		for(var i = o.length - 1, n = 0; i >= 0; i--, n++){
+			this.indexs[n] = o.eq(i).click(self.PagerClick)
+		}
+	}
+
+	this.Play = function(){
+		isPlay = true
+		index++
+
+		if(index == self.length){
+			index = 0
+		}
+
+		// fadeout first
+		self.list.eq(pre).fadeOut(300, function(){
+			var info = self.list.eq(index).fadeIn(500, function(){
+				isPlay = false
+
+				if(isPagerClick){
+					handid = setInterval(self.play, self.timer)
+					isPagerClick = false
+				}
+			}).attr('title')
+
+			self.showTitle.text(info)
+			self.indexs[index].css('background', '#ff70ad')
+			self.indexs[pre].css('background', '#6f4f67')
+
+			pre = index
+		})
+	}
+
+	this.PagerClick = function(){
+		if(isPlay){
+			return
+		}
+
+		isPagerClick = true
+
+		clearInterval(handid)
+
+		var oPager = $(this), i = parseInt(oPager.text()) - 1
+
+		if(i != pre){
+			index = i - 1
+			self.Play()
+		}
+	}
+}
+
+</script>
+
+</body>
+</html>

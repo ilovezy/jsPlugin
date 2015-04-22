@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1; user-scalable=no">
+<title>无标题文档</title>
+<link rel="stylesheet" href="bootstrap-3.2.0-dist/css/bootstrap.min.css" />
+</head>
+
+<body>
+
+<style type="text/css">
+.box{
+	width: 800px; height: 200px; margin-top: 100px; margin-left: 100px; overflow: hidden
+
+}
+.box img{
+	height: 200px
+}
+.box ul{
+	margin: 0; padding: 0; list-style: none
+}
+.box ul li{float: left}
+</style>
+
+<div class="box">
+	<div class="width: 1000px" id="boxDiv">
+		<ul>
+			<li style="display: block"><a href=""><img class="img-responsive" src="img/1.jpg" /></a></li>
+			<li><a href=""><img class="img-responsive" src="img/2.jpg" /></a></li>
+			<li><a href=""><img class="img-responsive" src="img/3.jpg" /></a></li>
+			<li><a href=""><img class="img-responsive" src="img/4.jpg" /></a></li>
+		</ul>
+	</div>
+</div>
+
+<script src="jquery-1.11.1.min.js"></script>
+<script type="text/javascript">
+'use strict'
+
+new ZouMa().Start()
+
+function ZouMa(){
+	this.maxLength = 3
+	this.Timer = 3000
+	this.Ul = $('.box ul')
+
+	var handId, self = this
+
+	this.Start = function(){
+		if(self.Ul.children().length < this.maxLength){
+			self.Ul.append(self.Ul.children().clone())
+		}
+
+		handId = setInterval(self.Play, self.Timer)
+	}
+
+	this.Play = function(){
+		var img = self.Ul.children().eq(0),
+			left = img.children().eq(0).width()
+
+		img.animate({'marginLeft': (-left) + 'px'}, 600, function(){
+			$(this).css('margin-left', 'auto').appendTo(self.Ul)
+			// 注意这个 appendTo,会把原来的节点直接拿下来的，所以可以实现无限播
+		})
+	}
+}
+
+</script>
+
+</body>
+</html>
