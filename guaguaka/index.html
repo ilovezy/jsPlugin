@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width; initial-scale=1; maximum-scale=1; user-scalable=no">
+<title></title>
+<link rel="stylesheet" href="bootstrap-3.2.0-dist/css/bootstrap.min.css" />
+<style>
+img{width: 500px; }
+</style>
+</head>
+
+<body>
+
+<div class="container-fluid">
+    <h2 class="text-center"> </h2>
+    <canvas></canvas>
+</div>
+
+<script src="js/jquery-1.11.1.min.js"></script>
+<script src="bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+
+var bodyStyle = document.body.style
+bodyStyle.mozUserSelect = 'none'
+bodyStyle.webkitUserSelect = 'none'
+
+var img = new Image(),
+    canvas = document.querySelector('canvas')
+
+canvas.style.backgroundColor = 'transparent'
+canvas.style.position = 'absolute'
+
+var imgs = ['img/3.jpg', 'img/4.jpg'],
+    num = Math.floor(Math.random() * 2)
+
+img.src = imgs[num]
+
+// 主要函数了
+img.addEventListener('load', function(e){
+    var ctx, 
+        w = img.width,
+        h = img.height,
+        offsetX = canvas.offsetLeft,
+        offsetY = canvas.offsetTop,
+        mousedown = false
+
+    function layer(ctx){
+        ctx.fillStyle = 'gray'
+        ctx.fillRect(0, 0, w, h)
+    } 
+
+    function eventDown(e){
+        e.preventDefault()
+        mousedown = true
+    }
+
+    function eventUp(e){
+        e.preventDefault()
+        mousedown = false
+    }
+
+    function eventMove(e){
+        e.preventDefault()
+
+        if(mousedown){
+            if(e.changedTouches){
+                e = e.changedTouches[e.changedTouches.length - 1]
+            }
+
+            var x = (e.clientX + document.body.scrollLeft || e.pageX) - offsetX
+                || 0,
+                y = (e.clientY + document.body.scrollTop || e.pageY) - offsetY
+                    || 0
+
+            with(ctx){
+                beginPath()
+                arc(x, y, 20, 0, Math.PI * 2)
+                fill()
+            }
+        }
+    }
+
+    canvas.width = w
+    canvas.height = h
+    canvas.style.backgroundImage = 'url(' + img.src + ')'
+    ctx = canvas.getContext('2d')
+    ctx.fillStyle = 'transparent'
+    ctx.fillRect(0, 0, w, h)
+    layer(ctx)
+
+    ctx.globalCompositeOperation = 'destination-out'
+    canvas.addEventListener('touchstart', eventDown)
+    canvas.addEventListener('touched', eventUp)
+    canvas.addEventListener('touchmove', eventMove)
+    canvas.addEventListener('mousedown', eventDown)
+    canvas.addEventListener('mouseup', eventUp)
+    canvas.addEventListener('mousemove', eventMove)
+})
+
+</script>
+
+</body>
+</html>
+        
+
+
+
